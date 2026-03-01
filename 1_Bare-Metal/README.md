@@ -12,15 +12,7 @@ This repository systematically strips away hardware abstraction layers (HAL) to 
 
 ## 🛠️ Completed Bare-Metal Drivers
 
-### 1. GPIO (General Purpose Input/Output)
-* **Status:** COMPLETE
-* **Bus:** AHB1 (`RCC_AHB1ENR`)
-* **Features Implemented:**
-  * **Output Configuration:** Bare-metal bitwise masking for `MODER` and `ODR` registers to drive LEDs on Port D (Pins 12-15).
-  * **Input Configuration:** `IDR` state evaluation for User Button on Port A (Pin 0).
-  * **Software Debouncing:** Engineered an explicit temporal delay loop to mitigate mechanical switch bounce without relying on HAL `HAL_Delay()` abstractions.
-
-  ### 2. Bare-Metal GPIO & Safety-Critical Systems
+  ### 1. Bare-Metal GPIO & Safety-Critical Systems
 * **Status:** COMPLETE
 * **Bus:** AHB1 (`RCC_AHB1ENR`)
 * **Engineered Applications:**
@@ -28,7 +20,7 @@ This repository systematically strips away hardware abstraction layers (HAL) to 
   * **HMI Debounce Controller:** Architected a bare-metal switch debouncing algorithm for Port A (PA0) without relying on RTOS or HAL blocking delays.
   * **Direct Register Manipulation:** Handled all `MODER`, `ODR`, and `IDR` bitwise masking natively using custom `typedef struct` memory boundaries.
 
-### 3. USART (Universal Synchronous Asynchronous Receiver Transmitter)
+### 2. USART (Universal Synchronous Asynchronous Receiver Transmitter)
 * **Status:** IN PROGRESS
 * **Bus:** APB1
 * **Pins:** PA2 (TX), PA3 (RX) - Alternate Function 7
