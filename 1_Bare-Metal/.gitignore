@@ -1,0 +1,14 @@
+# Build artifacts
+*.o
+*.elf
+*.bin
+*.hex
+*.map
+
+# IDE configurations
+.vscode/
+
+# Ignore build output folders anywhere in the tree
+build/
+Debug/
+Release/

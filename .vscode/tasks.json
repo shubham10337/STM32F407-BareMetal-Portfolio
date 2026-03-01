@@ -1,0 +1,32 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Project",
+            "type": "shell",
+            "command": "make",
+            "args": ["all"],
+            "options": {
+                /* CORRECTION: Run make in the directory of the open file (e.g., 01_Blinky_delay) */
+                "cwd": "${fileDirname}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Builds the project located in the current file's directory."
+        },
+        {
+            "label": "Clean Project",
+            "type": "shell",
+            "command": "make",
+            "args": ["clean"],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+LED3 - PD13  //CLEAR BIT 26 & 27 AND SET BIT 26 FOR OUTPUT for pin 13
+LED4 - PD12  //CLEAR BIT 24 & 25 AND SET BIT 22 FOR OUTPUT for pin 12
+LED5 - PD14  //CLEAR BIT 28 & 29 AND SET BIT 28 FOR OUTPUT for pin 14
+LED6 - PD15  //CLEAR BIT 30 & 31 AND SET BIT 30 FOR OUTPUT for pin 15
+
+GPIOD_BASE - (0x40020C00)
+RCC_BASE - (0x40023800)
+
+RCC_AHB1ENR - (0x40023800 + 0x30) bit 0 for Port A and bit 3 for Port B
+GPIOD_MODER - (0x40020C00) 01 for output                                
+GPIOD_ODR -   (0x40020C00 + 0x14) bit 13 for pin 13
+
+
+
+
+

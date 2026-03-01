@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "STM32F407 Discovery (Dynamic)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "stlink",
+            
+            /* DYNAMIC ROOT: Sets the working dir to the current project folder */
+            "cwd": "${fileDirname}",
+
+            /* INTELLIGENT MATCHING: 
+             * If folder is '01_Blinky_delay', it looks for '01_Blinky_delay.elf' 
+             */
+            "executable": "${fileDirname}/${fileDirnameBasename}.elf",
+             // NOTE: If the above fails, try: "${fileDirname}/${fileDirnameBasename}.elf"
+
+            "svdFile": "${workspaceFolder}/1_Bare-Metal/STM32F407.svd",
+            "device": "STM32F407VG",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "raw",
+            "preLaunchTask": "Build Project",
+            "stm32cubeprogrammer": "C:/ST/STM32CubeCLT_1.20.0/STM32CubeProgrammer/bin"
+        }
+    ]
+}

@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "DiscoveryBoard",
+            "includePath": [
+                "${workspaceFolder}/1_Bare-Metal/Projects",
+                "${workspaceFolder}/1_Bare-Metal/drivers/inc"
+            ],
+            "defines": [
+                "STM32F4"
+            ],
+            "compilerPath": "C:/ST/STM32CubeCLT_1.20.0/GNU-tools-for-STM32/bin/arm-none-eabi-gcc.exe",
+            "cStandard": "c99",
+            "cppStandard": "c++11",
+            "intelliSenseMode": "gcc-arm"
+        }
+    ],
+    "version": 4
+}

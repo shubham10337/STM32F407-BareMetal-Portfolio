@@ -1,0 +1,13 @@
+USER BUTTON - PA0
+LED4  - PD12
+
+RCC_BASE - 0x40023800
+GPIOA_BASE - 0x40020000 
+GPIOD_BASE - 0x40020C00
+
+RCC_AHB1ENR - (0x40023800 + 0x30) // set bit 0 for GPIOA and 3 for GPIOD_BASE
+GPIOD_MODER - (0x40020C00) // set to enable mode           01 FOR OUTPUT
+GPIOA_MODER - (0x40020000) // clear to enable input mode   00 FOR INPUT
+GPIOD_ODR   - (0x40020C00 + 0x14) // set to send output(output data register) bit 12 for pin 12
+GPIOA_IDR   - (0x40020000 + 0x10) // set to recieve input(input data register) bit 0 for in 0
+
