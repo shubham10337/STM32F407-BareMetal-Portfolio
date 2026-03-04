@@ -33,8 +33,8 @@ int main(void) {
     GPIOA->MODER &= ~((3 << 4) | (3 << 6)); /* Scrub Mode */
     GPIOA->MODER |=  ((2 << 4) | (2 << 6)); /* Set to AF Mode (10) */
     
-    GPIOA->AFRL &= ~((0xF << 8) | (0xF << 12)); /* Scrub AFRL for Pins 2 & 3 */
-    GPIOA->AFRL |=  ((7 << 8) | (7 << 12));     /* Inject AF7 */
+    GPIOA->AFR[0] &= ~((0xF << 8) | (0xF << 12)); /* Scrub AFRL for Pins 2 & 3 */
+    GPIOA->AFR[0]=  ((7 << 8) | (7 << 12));     /* Inject AF7 */
 
     /* Phase 3: Baud Rate Configuration (115200 at 16MHz) */
     /* USARTDIV = 16MHz / (16 * 115200) = 8.68 -> Mantissa 8, Fraction 11 */
