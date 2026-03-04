@@ -1,57 +1,56 @@
-#include<stdint.h>
-#include<stm32f407xx.h>
+#include <stdio.h>
+#include <stdint.h>
+#include "stm32f407xx.h" /* Official STMicroelectronics Device Header */
 
-#define USART2EN (1U << 17)
-#define GPIOAEN  (1U << 0)
-#define USARTEN  (1U << 13)
-#define TX_EN    (1U << 3)
-#define RX_EN    (1U << 2)
-#define SR_TXE   (1U << 7)
-
-#define RX_Pin 3
-#define TX_Pin 2
-
-#define Periph_clk 16000000
-#define Baudrate 115200
-
-static uint16_t calculateBR(uint32_t periph_clk,uint32_t baudrate);
-static void send_data(int data);
-
-
-int main(void){
-    //Enable Clock
-    RCC -> APB1ENR |= USART2EN;
-    RCC -> AHB1ENR |= GPIOAEN;
-
-    //GPIO MODE SETUP
-    GPIOA -> MODER &= ~(1U <<(2*RX_Pin));
-    GPIOA -> MODER &= ~(1U <<(2*TX_Pin));
-    GPIOA -> MODER |= (2U <<(2*RX_Pin));
-    GPIOA -> MODER |= (2U <<(2*TX_Pin));
-    GPIOA -> AFR[0] &= ~(0xf << 8);
-    GPIOA -> AFR[0] |= (7U << 8);
-    GPIOA -> AFR[0] &= ~(0xf << 12);
-    GPIOA -> AFR[0] |= (7U << 12);
-
-    //UART SETUP
-    USART2 -> CR1 |= USARTEN;
-    USART2 -> CR1 |= TX_EN;
-
-    USART2 -> BRR = calculateBR(Periph_clk,Baudrate);
-
-    while(1){
-         send_data(9);
-    }
-
+/* ------------------------------------------------------------------------- */
+/* 1. THE TRANSMISSION ENGINE                                                */
+/* ------------------------------------------------------------------------- */
+void USART2_SendChar(char data) {
+    /* The Roadblock: Wait until Transmit Data Register is Empty (TXE = 1) */
+    while (!(USART2->SR & (1 << 7)));
+    USART2->DR = data;
 }
 
-static uint16_t calculateBR(uint32_t periph_clk,uint32_t baudrate){
-    return ((periph_clk + (baudrate/2))/baudrate);
+/* ------------------------------------------------------------------------- */
+/* 2. THE STANDARD LIBRARY BRIDGE                                            */
+/* ------------------------------------------------------------------------- */
+int _write(int file, char *ptr, int len) {
+    for (int i = 0; i < len; i++) {
+        USART2_SendChar(ptr[i]);
+    }
+    return len;
 }
 
-static void send_data(int data){
-    while(!(USART2 -> SR & SR_TXE)){
+/* ------------------------------------------------------------------------- */
+/* 3. MAIN HARDWARE INITIALIZATION                                           */
+/* ------------------------------------------------------------------------- */
+int main(void) {
+    /* Phase 1: Clock Routing */
+    RCC->AHB1ENR |= (1 << 0);  /* Enable GPIOA */
+    RCC->APB1ENR |= (1 << 17); /* Enable USART2 */
 
+    /* Phase 2: Alternate Function Multiplexing (PA2 = TX, PA3 = RX) */
+    GPIOA->MODER &= ~((3 << 4) | (3 << 6)); /* Scrub Mode */
+    GPIOA->MODER |=  ((2 << 4) | (2 << 6)); /* Set to AF Mode (10) */
+    
+    GPIOA->AFRL &= ~((0xF << 8) | (0xF << 12)); /* Scrub AFRL for Pins 2 & 3 */
+    GPIOA->AFRL |=  ((7 << 8) | (7 << 12));     /* Inject AF7 */
+
+    /* Phase 3: Baud Rate Configuration (115200 at 16MHz) */
+    /* USARTDIV = 16MHz / (16 * 115200) = 8.68 -> Mantissa 8, Fraction 11 */
+    USART2->BRR = (8 << 4) | (11);
+
+    /* Phase 4: Ignition Sequence */
+    USART2->CR1 &= ~(1 << 12); /* 8 Data Bits (M = 0) */
+    USART2->CR1 |=  (1 << 3);  /* Transmitter Enable (TE = 1) */
+    USART2->CR1 |=  (1 << 13); /* Main Engine Enable (UE = 1) */
+
+    /* Phase 5: Execution */
+    printf("Bare-Metal USART2 Initialized using CMSIS.\r\n");
+    printf("System frequency: 16 MHz. Baud: 115200.\r\n");
+    printf("Hardware Routing: PA2 (TX), PA3 (RX).\r\n");
+
+    while (1) {
+        /* Main operating loop */
     }
-    USART2 -> DR =  (data &0xff);
 }
